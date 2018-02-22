@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <input id="Button1" type="button" value="查詢" onclick="GetCategories()" />
+    <input id="Button1" type="button" value="查詢ID" onclick="GetCategoriesID()" />
+    <input id="Button1" type="button" value="新增" onclick="PostCategories()" />
+    <input id="Button1" type="button" value="修改" onclick="PutCategories()" />
+    <input id="Button1" type="button" value="刪除" onclick="DeleteCategories()" />
+    <div id="CategoriesTable"></div>
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+
+    <script>
+        function GetCategories() {
+            $.ajax({
+                type: "GET",
+                url:"http://localhost:54011/api/Categories",
+            }).done(function (result) {
+                var data = "";
+
+                $.each(result, function (index, record) {
+                    data += record.CategoryID + ".  " + record.CategoryName + ",  " + record.Description + "<br/>";
+                });
+
+                $("#CategoriesTable").html(data);
+            }).fail(function (err) {
+                alert(err.responseText);
+            });
+        }
+
+        function GetCategoriesID() {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:54011/api/Categories/" + 1,
+            }).done(function (result) {
+                var data = result.CategoryID + ".  " + result.CategoryName + ",  " + result.Description
+
+                $("#CategoriesTable").text(data);
+            }).fail(function (err) {
+                alert(err.responseText);
+            });
+        }
+
+        function PostCategories() { //post 新增
+            $.ajax({
+                type: "POST",
+                data: {
+                    CategoryName: "MSIT117",
+                    Description:"Student"
+                },
+                url: "http://localhost:54011/api/Categories/",
+            }).done(function (result) {
+                $("#CategoriesTable").text(result);
+            }).fail(function (err) {
+                alert(err.responseText);
+            });
+        }
+
+        function PutCategories() { //post 更新
+            var Categories = {
+                CategoryID: 15,
+                CategoryName: "MSIT",
+                Description:"Students"
+            };
+            $.ajax({
+                type: "PUT",
+                data: Categories,
+                url: "http://localhost:54011/api/Categories/15",
+            }).done(function (result) {
+                $("#CategoriesTable").text(result);
+            }).fail(function (err) {
+                alert(err.responseText);
+            });
+        }
+
+        function DeleteCategories() { //post 刪除
+            $.ajax({
+                type: "DELETE",
+                url: "http://localhost:54011/api/Categories/15",
+            }).done(function (result) {
+                $("#CategoriesTable").text(result);
+            }).fail(function (err) {
+                alert(err.responseText);
+            });
+        }
+    </script>
+</body>
+</html>
